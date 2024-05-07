@@ -110,5 +110,59 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+document.addEventListener('wheel', (event) => {
+    if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
+        event.preventDefault();
+    }
+}, { passive: false });
+
+let startX = 0;
+let startY = 0;
+
+document.addEventListener('touchstart', (event) => {
+    const touch = event.touches[0];
+    startX = touch.clientX;
+    startY = touch.clientY;
+}, { passive: false });
+
+document.addEventListener('touchmove', (event) => {
+    const touch = event.touches[0];
+    const deltaX = Math.abs(touch.clientX - startX);
+    const deltaY = Math.abs(touch.clientY - startY);
+
+    if (deltaX > deltaY) {
+        event.preventDefault();
+    }
+}, { passive: false });
+
+function adjustBelowSvgHeight() {
+    const other = document.getElementById('second');
+    const svgContent = document.getElementById('svg-content');
+    const belowSvg = document.getElementById('below-svg');
+
+    const otherHeight = other.offsetHeight;
+    const svgHeight = svgContent.getBoundingClientRect().height;
+
+    belowSvg.style.height = (otherHeight - svgHeight) + 'px';
+
+    const other1 = document.getElementById('first');
+    const svgContent1 = document.getElementById('svg-content1');
+    const belowSvg1 = document.getElementById('below-svg1');
+
+// 获取元素的高度
+    const otherHeight1 = other1.offsetHeight;
+    const svgHeight1 = svgContent1.getBoundingClientRect().height;
+
+// 计算当前的高度差
+    const heightDifference = otherHeight1 - svgHeight1;
+
+// 将高度差转换为像素值，并添加 20vh
+    belowSvg1.style.height = (heightDifference + 50) + 'px';
+
+}
+
+window.addEventListener('load', adjustBelowSvgHeight);
+window.addEventListener('resize', adjustBelowSvgHeight);
+
 
 
