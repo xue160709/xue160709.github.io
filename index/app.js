@@ -145,7 +145,7 @@ function adjustBelowSvgHeight() {
 
     belowSvg.style.height = (otherHeight - svgHeight) + 'px';
 
-    const other1 = document.getElementById('first');
+    const other1 = document.getElementById('first-other');
     const svgContent1 = document.getElementById('svg-content1');
     const belowSvg1 = document.getElementById('below-svg1');
 
