@@ -8,6 +8,73 @@
     <link rel="stylesheet" href="style.css">
     <script type="module" src="app.js"></script>
 
+    <script src="../javascript/translate.js"></script>
+    <script>
+        const tr = () => {
+
+            //提取url里的参数
+            function getURLParameters(url) {
+                var params = {};
+                var urlParts = url.split('?');
+
+                if (urlParts.length > 1) {
+                    var queryString = urlParts[1];
+                    var paramPairs = queryString.split('&');
+
+                    for (var i = 0; i < paramPairs.length; i++) {
+                        var pair = paramPairs[i].split('=');
+                        var paramName = decodeURIComponent(pair[0]);
+                        var paramValue = decodeURIComponent(pair[1] || '');
+
+                        if (paramName.length > 0) {
+                            params[paramName] = paramValue;
+                        }
+                    }
+                }
+
+                return params;
+            };
+
+            const { lang } = getURLParameters(window.location.href)
+            console.log('#传参lang111', lang)
+            // 检查localStorage中是否有语言设置，如果有，则使用该设置
+            window.translate.ignore.id.push('translateSelectLanguage');
+            window.translate.ignore.id.push('share_btns');
+            window.translate.language.clearCacheLanguage();
+            window.translate.selectLanguageTag.show = false;
+            let savedLanguage = localStorage.getItem('selectedLanguage');
+            //优先使用url传参
+            if (lang && langs[lang]) savedLanguage = langs[lang];
+            if (savedLanguage && savedLanguage !== "Not Translate" && savedLanguage !== "Default") {
+                console.log("Saved language found1", savedLanguage);
+                window.translate.language.setDefaultTo(savedLanguage);
+
+            } else if (savedLanguage && savedLanguage === "Not Translate") {
+                console.log("Saved language found2", savedLanguage);
+                return
+            } else {
+                console.log("Saved language not found");
+                window.translate.setAutoDiscriminateLocalLanguage();
+            }
+
+            window.translate.service.use('client.edge');
+            window.translate.listener.start();
+            window.translate.execute(); // 进行翻译
+
+        };
+
+        const _tr = () => setTimeout(() => {
+            if (window.translate) {
+                tr()
+            } else {
+                console.log(window.translate)
+                _tr()
+            }
+        }, 200);
+
+        _tr()
+
+    </script>
 </head>
 <body>
 <div id="container">
